@@ -19,8 +19,8 @@ CREATE TABLE users (
 
   CREATE TABLE posts (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id INTEGER UNIQUE,
-    usersname VARCHAR(255) UNIQUE,
+    user_id INTEGER,
+    usersname VARCHAR(255),
     title VARCHAR(255) NOT NULL UNIQUE,
     created_at timestamp DEFAULT CURRENT_TIMESTAMP DEFAULT_GENERATED,
     updated_at datetime ,
