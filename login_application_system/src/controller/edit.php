@@ -40,18 +40,18 @@ if (isset($_GET) && (count($_GET) > 0)) {
   try {
     $connection->pdo->beginTransaction();
     $stmt = $connection->pdo->prepare("SELECT * FROM users WHERE id=:id");
-    $stmt->execute(['id' => $_POST['id']]);
+    $stmt->execute(['id' => $_SESSION['id']]);
     if ($stmt->rowCount()) {
       if (password_verify($_POST['password'], $stmt->fetch()['password'])) {
         $stmt = $connection->pdo->prepare("UPDATE posts SET 
-        title=:title,content=:content,updated_at=:updated_at 
-        WHERE id=:id"
+          title=:title,content=:content,updated_at=:updated_at 
+          WHERE user_id=:user_id"
         );
         $stmt->execute([
           'title' => $_POST['title'],
           'content' => $_POST['content'],
           'updated_at' => date('Y-m-d H:i'),
-          'id' => $_POST['id']
+          'user_id' => $_SESSION['id']
         ]);
         if ($stmt->rowCount()) {
           $_SESSION['success'] = 'Your editing has been applied successfully';
@@ -69,9 +69,9 @@ if (isset($_GET) && (count($_GET) > 0)) {
       header('location:../../view/index.php');
     }
     $connection->pdo->commit();
-  } catch (PDOException $e) {
-    $connection->pdo->rollBack();
-    $_SESSION['error'] = 'Post title Already exists';
+  } catch (\PDOException $e) {
+    $connection->pdo->rollback();
+    $_SESSION['error'] = 'Post Title Already Exists';
     header('location:../../view/index.php');
   }
 
